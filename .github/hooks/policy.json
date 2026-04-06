@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": "./hooks/bin/pre-tool-use.sh",
+        "timeoutSec": 5,
+        "comment": "Block dangerous shell patterns and sensitive path edits."
+      }
+    ],
+    "subagentStop": [
+      {
+        "type": "command",
+        "bash": "./hooks/bin/subagent-stop.sh",
+        "timeoutSec": 5,
+        "comment": "Validate common subagent output contracts when possible."
+      }
+    ],
+    "sessionEnd": [
+      {
+        "type": "command",
+        "bash": "./hooks/bin/session-end.sh",
+        "timeoutSec": 5,
+        "comment": "Append compact session metadata to a local runtime log."
+      }
+    ]
+  }
+}
