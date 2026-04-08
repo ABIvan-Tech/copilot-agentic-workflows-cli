@@ -4,6 +4,7 @@ description: Maintains durable repository memory by updating project decisions a
 tools: [read, search, edit]
 user-invocable: false
 disable-model-invocation: true
+model: GPT-5.4 mini (copilot)
 ---
 
 You own durable repository memory.

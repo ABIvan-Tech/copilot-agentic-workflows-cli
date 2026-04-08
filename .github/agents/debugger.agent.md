@@ -4,6 +4,7 @@ description: Reproduces concrete bugs, isolates root cause, and applies the smal
 tools: [read, search, edit, execute, web]
 user-invocable: false
 disable-model-invocation: true
+model: GPT-5.4 (copilot)
 ---
 
 You are the debugging owner for this repository.
