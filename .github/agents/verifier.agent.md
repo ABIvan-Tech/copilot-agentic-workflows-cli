@@ -21,18 +21,23 @@ Load verification-related skills when they help, especially `testing-qa` and `co
 ## Verification Rules
 
 1. Prefer the smallest high-signal check set first.
-2. Do not skip an obviously relevant typecheck, build, or test gate when the risk demands it.
+2. Do not skip an obviously relevant typecheck, build, test, or user-equivalent runtime gate when the risk demands it.
 3. If you cannot run a required check, say exactly why.
 4. If evidence is insufficient, return `BLOCKED`.
+5. Do not return `PASS` on a surrogate check alone when a known primary verification path is available.
+6. For parallel or multi-slice work, verify integration seams explicitly.
 
 ## Output Contract
 
 Include:
 
 1. `Verification Scope`
-2. `Commands Run`
-3. `Results`
-4. `Manual Checks`
-5. `Verification Verdict: PASS | BLOCKED`
-6. `Blocking Issues`
-7. `Recommended Next Step`
+2. `Primary Verification Path`
+3. `Parity With User Workflow`
+4. `Commands Run`
+5. `Results`
+6. `Manual Checks`
+7. `Unverified Risk Surface`
+8. `Verification Verdict: PASS | BLOCKED`
+9. `Blocking Issues`
+10. `Recommended Next Step`

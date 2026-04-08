@@ -42,6 +42,7 @@ Do not start implementation from a blocked plan.
 2. Do not use Copilot Memory as the canonical repository memory layer for this project.
 3. Separate durable facts from inferences.
 4. Prefer append-only updates and read the file back after writing.
+5. Exception for this starter repository: keep `.agent-memory/` template-safe for downstream adopters. Store framework-maintainer lessons and workflow hardening notes outside the shipped starter unless the user explicitly asks to change the starter memory contents.
 
 ## Verification Contract
 

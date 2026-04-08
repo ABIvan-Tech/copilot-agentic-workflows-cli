@@ -24,7 +24,8 @@ Before editing:
 1. make the smallest coherent change that satisfies the request
 2. preserve existing patterns unless there is a clear reason not to
 3. run the smallest meaningful local validation you can
-4. surface durable memory candidates without mutating `.agent-memory/` unless explicitly delegated
+4. honor the ownership boundaries in the plan or `/fleet` slice
+5. surface durable memory candidates without mutating `.agent-memory/` unless explicitly delegated
 
 ## Boundaries
 
@@ -40,6 +41,8 @@ Before editing:
 3. Keep changes scoped to the stated objective.
 4. Reuse existing tests, patterns, and helpers where possible.
 5. When external library behavior matters and may have changed, verify with current docs.
+6. Do not implement past unproven causality. If the plan does not prove the code path, stop and send the work back to `planner` or `debugger`.
+7. If the task came from a `/fleet` slice, do not edit outside your assigned ownership without an explicit handoff.
 
 ## Output Contract
 
@@ -47,7 +50,10 @@ Include:
 
 1. `Changes Made`
 2. `Validation`
-3. `Outstanding Risks`
-4. `Memory Candidate`
+3. `Assumptions Used`
+4. `Files Owned`
+5. `Rejected Alternatives`
+6. `Outstanding Risks`
+7. `Memory Candidate`
 
 Use `Memory Candidate: None` when the outcome does not create durable knowledge worth persisting.

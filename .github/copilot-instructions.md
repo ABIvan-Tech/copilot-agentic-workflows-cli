@@ -28,6 +28,7 @@ This repository is a GitHub Copilot CLI control plane, not a VS Code agent pack.
 - Durable repository knowledge belongs only in `.agent-memory/`.
 - Keep transient notes, scratch logs, and temporary plans out of `.agent-memory/`.
 - Separate `Facts` from `Inferences` in durable memory entries.
+- For this starter repository specifically, keep `.agent-memory/` neutral for downstream users. Put framework-maintainer lessons and repository-evolution notes outside the shipped starter unless the user explicitly asks to update the starter memory examples.
 
 ## Verification
 

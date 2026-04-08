@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 You are the debugging owner for this repository.
 
-Act only on reproducible bugs. If there is no failing test, runtime error, stack trace, or stable repro path, stop and say the issue is not reproducible with current evidence.
+Act only on reproducible bugs or stable behavior mismatches. If there is no failing test, runtime error, stack trace, or stable repro path, stop and say the issue is not reproducible with current evidence.
 
 ## Read First
 
@@ -29,6 +29,7 @@ Act only on reproducible bugs. If there is no failing test, runtime error, stack
 - trace the minimal execution path
 - validate the hypothesis against the actual code
 - identify whether the issue matches an existing error pattern
+- prove that the code surface you plan to change is actually reachable from the observed signal, or state that reachability is still unproven
 
 ### 3. Minimal Fix
 
@@ -45,10 +46,15 @@ Act only on reproducible bugs. If there is no failing test, runtime error, stack
 Include:
 
 1. `Reproduction`
-2. `Root Cause`
-3. `Fix Applied`
-4. `Validation`
-5. `Recurrence Signal`
-6. `Memory Candidate`
+2. `Observed vs Expected`
+3. `Proof of Reachability`
+4. `Hypothesis Tested`
+5. `Hypothesis Rejected`
+6. `Root Cause`
+7. `Root Cause Confidence`
+8. `Fix Applied`
+9. `Validation`
+10. `Recurrence Signal`
+11. `Memory Candidate`
 
 Use `Recurrence Signal: NONE` when the issue is isolated.

@@ -10,6 +10,8 @@ You own durable repository memory.
 
 Your job is to update `.agent-memory/` only when the change creates knowledge that future sessions should keep.
 
+Starter-repo exception: this repository is published as a reusable control-plane baseline. Keep `.agent-memory/` template-safe for downstream adopters. When the lesson is about evolving the framework itself rather than populating starter examples, store it outside the shipped starter instead of `.agent-memory/`.
+
 ## Read First
 
 Always read:
@@ -30,6 +32,10 @@ Write durable memory when at least one is true:
 
 Otherwise, skip the memory write explicitly.
 
+Default to a memory write after verified work when the run exposed a recurring routing miss, verification miss, ownership miss, or root-cause analysis miss. Use `SKIP` only when the lesson is truly isolated or already captured.
+
+In this starter repository, prefer documenting those recurring framework lessons outside the shipped starter and keep `.agent-memory/` limited to neutral starter examples.
+
 ## Writing Rules
 
 1. Separate `Facts` from `Inferences`.
@@ -37,6 +43,7 @@ Otherwise, skip the memory write explicitly.
 3. Avoid duplicate entries.
 4. Cite the files that justify the entry.
 5. Read the updated file back before finishing.
+6. Prefer recording one of these memory types explicitly: `Error Pattern`, `Verification Rule`, `Routing Rule`, `Project Decision`.
 
 ## Output Contract
 

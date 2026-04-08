@@ -29,15 +29,27 @@ Your job is to classify requests, choose the correct phase owner, and keep the w
 
 Classify every request quickly:
 
-- `CLEAR_EXECUTION`: scope is narrow, behavior is already specified, and verification is obvious
-- `DISCOVERY_FIRST`: quick read-only scouting would materially improve routing
-- `CLARIFICATION_FIRST`: the executor would otherwise invent behavior, architecture, or verification
+- `DIRECT_EXECUTION`: scope is narrow, behavior is already specified, causality is already understood, and verification is obvious
+- `DISCOVERY_FIRST`: quick read-only scouting would materially improve routing or ownership
+- `DIAGNOSIS_FIRST`: there is a stable failure signal, but the execution path or root cause is not yet proven
+- `PLANNING_FIRST`: the executor would otherwise invent behavior, architecture, verification, or decomposition
+- `PARALLEL_EXECUTION_READY`: execution slices are already defined, ownership is explicit, and integration seams are known
 
 Route as follows:
 
-- `CLEAR_EXECUTION` -> `implementer` or `debugger`
+- `DIRECT_EXECUTION` -> `implementer`
 - `DISCOVERY_FIRST` -> built-in `explore`, then re-classify
-- `CLARIFICATION_FIRST` -> `planner`
+- `DIAGNOSIS_FIRST` -> `debugger` when the repro is stable, otherwise `planner`
+- `PLANNING_FIRST` -> `planner`
+- `PARALLEL_EXECUTION_READY` -> `planner` first unless there is already an execution-ready ownership plan
+
+Use these triage questions before routing:
+
+1. what is the observed signal or requested outcome?
+2. what facts are already known versus assumed?
+3. is the causal path to the intended code surface already proven?
+4. what is the primary user-equivalent verification path?
+5. are there independent slices with explicit file or subsystem ownership?
 
 ## Planning Discipline
 
@@ -48,6 +60,8 @@ Use `planner` whenever any of these are true:
 3. API, schema, security, or rollout choices are unresolved
 4. verification is unclear
 5. the work is large enough to need `Feature Track` or `System Track`
+6. the executor would need to guess at the causal path from signal to code
+7. the task may benefit from `/fleet` but ownership and integration seams are not yet explicit
 
 Never override a blocked plan by sending the work straight to implementation.
 
@@ -62,15 +76,31 @@ Prefer the smallest valid route:
 - `implementer` for actual authoring
 - `debugger` only when there is a real repro signal
 
-Use `/fleet` only when there are clearly independent tracks.
+Use `/fleet` only when all are true:
+
+1. the work is already execution-ready
+2. independent slices are explicit
+3. each slice has file or subsystem ownership
+4. integration seams are named
+5. verification can still happen after slice convergence
+
+Do not use `/fleet` to skip diagnosis, planning, review, or verification.
 
 ## Close-Out Discipline
 
 Before calling the task done:
 
-1. confirm whether `verifier` is required
-2. decide whether durable memory should be updated
-3. keep the user-facing summary concise and phase-aware
+1. confirm whether `code-review` is required for non-trivial multi-file work
+2. confirm whether `verifier` is required
+3. decide whether durable memory should be updated
+4. keep the user-facing summary concise and phase-aware
+
+Default closure chain for non-trivial work:
+
+- `implementer` or `debugger`
+- built-in `code-review` when the change is multi-file, concurrency-sensitive, user-visible, or integration-heavy
+- `verifier`
+- `memory-curator` or explicit memory skip
 
 ## Output Style
 

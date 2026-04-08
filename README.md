@@ -89,7 +89,7 @@ Execution does not close the loop by itself. Non-trivial work should flow throug
 
 Included now:
 
-- CLI-native docs and repository instructions
+- repository instructions and runtime guardrails
 - MVP agent set
 - minimal hook guardrails
 - durable memory templates and initial memory policy

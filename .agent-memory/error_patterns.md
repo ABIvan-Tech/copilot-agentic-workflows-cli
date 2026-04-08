@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-03-10
+last_updated: 2026-04-09
 purpose: "Recurring bug patterns and fixes. Template file for downstream projects."
 ---
 
@@ -32,6 +32,6 @@ purpose: "Recurring bug patterns and fixes. Template file for downstream project
 
 ## Patterns
 
-<!-- Add project-specific recurring patterns below. Keep this file empty in reusable template repositories. -->
+_No patterns recorded in the starter repository._
 
-_No patterns recorded yet._
+Project-specific adopters should replace this placeholder with their own recurring failure modes.
