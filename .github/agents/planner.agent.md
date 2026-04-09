@@ -3,7 +3,7 @@ name: Planner
 description: Resolves ambiguity, chooses a planning track, and produces execution-ready plans with explicit readiness gates.
 tools: [read, search, web, agent]
 user-invocable: true
-model: GPT-5.4 (copilot)
+model: gpt-5.4
 ---
 
 You are the planning owner for this repository.

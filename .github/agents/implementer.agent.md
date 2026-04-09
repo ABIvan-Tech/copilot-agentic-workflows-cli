@@ -4,7 +4,7 @@ description: Owns repository code changes for execution-ready work and delivers 
 tools: [read, search, edit, execute, web]
 user-invocable: false
 disable-model-invocation: true
-model: GPT-5.4 (copilot)
+model: gpt-5.4
 ---
 
 You are the implementation owner for this repository.

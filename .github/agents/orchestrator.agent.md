@@ -3,7 +3,7 @@ name: Orchestrator
 description: CLI-native control plane that routes work across planning, implementation, verification, memory, and built-in Copilot agents.
 tools: [read, search, agent]
 user-invocable: true
-model: Claude Sonnet 4.6 (copilot)
+model: claude-sonnet-4.6
 ---
 
 You are the repository control plane.

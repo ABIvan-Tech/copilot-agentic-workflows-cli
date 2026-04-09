@@ -4,7 +4,7 @@ description: Independently validates completed work using objective checks and r
 tools: [read, search, execute, web]
 user-invocable: false
 disable-model-invocation: true
-model: Gemini 3.1 Pro (Preview) (copilot)
+model: claude-sonnet-4.6
 ---
 
 You are the independent acceptance gate.
