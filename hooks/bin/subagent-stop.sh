@@ -31,6 +31,9 @@ if printf '%s' "$AGENT_NAME_LC" | grep -q 'planner'; then
     if ! printf '%s' "$ALL_TEXT" | grep -Eq 'Execution Path / Causal Path'; then
       block "Planner output marked complete must include Execution Path / Causal Path."
     fi
+    if ! printf '%s' "$ALL_TEXT" | grep -Eq 'Rubber-Duck Recommendation:[[:space:]]+(RECOMMENDED|OPTIONAL|SKIP)'; then
+      block "Planner output marked complete must include Rubber-Duck Recommendation: RECOMMENDED, OPTIONAL, or SKIP."
+    fi
     if printf '%s' "$ALL_TEXT" | grep -Eq 'Parallelization Decision:[[:space:]]*/fleet|Status:[[:space:]]*ENABLED'; then
       if ! printf '%s' "$ALL_TEXT" | grep -Eq 'Ownership Plan'; then
         block "Planner output enabling parallel work must include Ownership Plan."

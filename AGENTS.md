@@ -13,10 +13,11 @@ This repository defines a CLI-native control plane for GitHub Copilot CLI.
 ## Copilot CLI-Native Assumptions
 
 1. Reuse built-in agents for generic capabilities:
-   - `explore` for read-only scouting
-   - `task` for command-heavy execution
-   - `research` for external research
-   - `code-review` for targeted review
+   - `explore` for fast, targeted read-only scouting; stop once the routing question is answered
+   - `task` for command-heavy execution; concise success output, full failure output
+   - `research` for external research when current docs, APIs, or market state matter
+   - `code-review` for high-signal review; bugs and real risks only, no style noise
+   - `rubber-duck` for an optional second opinion after planning and before implementation on non-trivial work
    - `general-purpose` for fallback delegation
 2. Keep custom agents focused on phase ownership, not persona sprawl.
 3. Do not rely on VS Code-only tools, metadata, or workflows.
@@ -35,6 +36,7 @@ Plans for non-trivial work should include:
 - `Multi-Hive Decision`
 
 Do not start implementation from a blocked plan.
+For high-risk, multi-surface, or fragile plans, prefer an optional `rubber-duck` pass before implementation.
 
 ## Durable Memory Contract
 
@@ -53,6 +55,11 @@ Verification responses should stay evidence-based and include:
 - results
 - verdict
 - blockers or next step
+
+Review should stay high-signal:
+
+- report only bugs, correctness risks, security issues, integration breaks, race conditions, resource leaks, and other real defects
+- do not spend review bandwidth on style, naming, formatting, or speculative refactors
 
 ## Guardrails
 

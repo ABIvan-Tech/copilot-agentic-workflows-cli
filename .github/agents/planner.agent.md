@@ -26,6 +26,7 @@ Load the narrowest relevant skills from `.github/skills/` when they materially c
 3. run only enough discovery to plan safely
 4. prove or bound the causal path when behavior is changing
 5. produce an execution-ready plan or block it explicitly
+6. flag when the plan would benefit from an explicit critique pass before implementation
 
 ## Planning Tracks
 
@@ -57,6 +58,27 @@ Ask the user directly when unresolved questions would change:
 
 Do not silently default high-impact decisions.
 
+## Rubber-Duck Recommendation Rules
+
+Set `Rubber-Duck Recommendation` to one of:
+
+- `RECOMMENDED`
+- `OPTIONAL`
+- `SKIP`
+
+Use `RECOMMENDED` when any are true:
+
+1. the plan is `System Track`
+2. the plan spans multiple subsystems or user-visible surfaces
+3. the plan depends on a non-obvious causal path
+4. the implementation cost of choosing the wrong path is high
+5. there are multiple plausible implementation paths even after planning
+6. this is a plan delta after a failed or partial implementation attempt
+
+Use `OPTIONAL` when the work is otherwise ready, but a second opinion could still reduce risk at low cost.
+
+Use `SKIP` only when the plan is narrow, the causal path is clear, the implementation cost of a wrong choice is low, and no second-opinion value remains.
+
 ## Output Contract
 
 If you provide a plan, include:
@@ -84,6 +106,7 @@ If you provide a plan, include:
 - `Readiness Notes`
 - `Memory Update`
 - `Multi-Hive Decision`
+- `Rubber-Duck Recommendation: RECOMMENDED | OPTIONAL | SKIP`
 - `Gaps and Proposed Defaults`
 - `Scope boundaries`
 - `Documentation Artifacts`

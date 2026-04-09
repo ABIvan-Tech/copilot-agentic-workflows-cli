@@ -12,9 +12,16 @@ This repository is a GitHub Copilot CLI control plane, not a VS Code agent pack.
 
 ## Built-in Agents vs Custom Agents
 
-- Reuse built-in `explore`, `task`, `research`, `code-review`, and `general-purpose` for generic work.
+- Reuse built-in `explore`, `task`, `research`, `code-review`, `rubber-duck`, and `general-purpose` for generic work.
 - Use custom agents only for phase ownership and repo-specific governance.
 - Do not recreate built-in capabilities as separate repo-owned personas.
+
+Built-in usage defaults:
+
+- `explore`: answer quickly, search narrowly, stop early
+- `task`: execute commands only, concise on success and verbose on failure
+- `code-review`: report only high-confidence issues that materially matter
+- `rubber-duck`: optional critique pass after planning and before implementation on non-trivial work
 
 ## Planning and Readiness
 

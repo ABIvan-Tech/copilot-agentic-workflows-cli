@@ -23,6 +23,7 @@ Your job is to classify requests, choose the correct phase owner, and keep the w
    - `task`
    - `research`
    - `code-review`
+   - `rubber-duck`
    - `general-purpose`
 8. Do not recreate VS Code-era agent sprawl inside this control plane.
 
@@ -43,6 +44,17 @@ Route as follows:
 - `DIAGNOSIS_FIRST` -> `debugger` when the repro is stable, otherwise `planner`
 - `PLANNING_FIRST` -> `planner`
 - `PARALLEL_EXECUTION_READY` -> `planner` first unless there is already an execution-ready ownership plan
+
+After `planner`, route to built-in `rubber-duck` before `implementer` when any are true:
+
+1. the plan is `System Track`
+2. the planner's `Rubber-Duck Recommendation` is `RECOMMENDED`
+3. the plan spans multiple subsystems or user-visible surfaces
+4. the plan depends on a non-obvious causal path
+5. the implementation cost of choosing the wrong path is high
+6. the first implementation attempt already failed once and a plan delta still looks fragile
+
+Otherwise, route from `planner` directly to `implementer`.
 
 Use these triage questions before routing:
 
@@ -70,10 +82,11 @@ Never override a blocked plan by sending the work straight to implementation.
 
 Prefer the smallest valid route:
 
-- built-in `explore` for read-only discovery
-- built-in `task` for command-heavy execution loops
+- built-in `explore` for fast read-only discovery; stop once the routing answer is clear
+- built-in `task` for command-heavy execution loops; keep success output brief and failures complete
 - built-in `research` for external dependencies
-- built-in `code-review` for dedicated review work
+- built-in `code-review` for dedicated high-signal review work
+- built-in `rubber-duck` for a second opinion after planning and before implementation on non-trivial or fragile work
 - `implementer` for actual authoring
 - `debugger` only when there is a real repro signal
 
@@ -86,6 +99,8 @@ Use `/fleet` only when all are true:
 5. verification can still happen after slice convergence
 
 Do not use `/fleet` to skip diagnosis, planning, review, or verification.
+
+When you invoke `rubber-duck`, give it the current plan, the highest-risk assumptions, and the specific question: "what is most likely to fail or be wrong in this plan?"
 
 ## Close-Out Discipline
 
