@@ -3,6 +3,7 @@ set -eu
 
 INPUT=$(cat || true)
 LOG_DIR=".tmp/copilot-hooks"
+BLOCK_LOG="$LOG_DIR/subagent-stop-blocks.log"
 
 mkdir -p "$LOG_DIR"
 printf '%s\n' "$INPUT" >> "$LOG_DIR/subagent-stop.jsonl"
@@ -11,14 +12,75 @@ if ! command -v jq >/dev/null 2>&1; then
   exit 0
 fi
 
+SESSION_ID=$(printf '%s' "$INPUT" | jq -r '.sessionId // .input.sessionId // .session.id // ""')
+TRANSCRIPT_PATH=$(printf '%s' "$INPUT" | jq -r '.transcriptPath // .input.transcriptPath // ""')
+
 block() {
-  jq -nc --arg reason "$1" '{decision:"block", reason:$reason}'
+  reason=$1
+  validation_hash=$(printf '%s' "$VALIDATION_TEXT" | cksum | awk '{print $1 ":" $2}')
+  state_key="$SESSION_ID|$AGENT_NAME_LC|$reason|$validation_hash"
+  printf '%s\n' "$state_key" >> "$BLOCK_LOG"
+  repeated_count=$(grep -Fxc "$state_key" "$BLOCK_LOG" 2>/dev/null || true)
+  # Prevent pathological retry loops when the runtime keeps resubmitting the same rejected output.
+  if [ "${repeated_count:-0}" -ge 3 ]; then
+    printf '%s\n' "$state_key" >> "$LOG_DIR/subagent-stop-bypassed.log"
+    exit 0
+  fi
+  jq -nc --arg reason "$reason" '{decision:"block", reason:$reason}'
   exit 0
 }
 
-AGENT_NAME=$(printf '%s' "$INPUT" | jq -r '.agentName // .subagentName // .agent.name // ""')
-ALL_TEXT=$(printf '%s' "$INPUT" | jq -r '[.. | strings] | join("\n")')
+AGENT_NAME=$(printf '%s' "$INPUT" | jq -r '.agentName // .input.agentName // .subagentName // .agent.name // ""')
 AGENT_NAME_LC=$(printf '%s' "$AGENT_NAME" | tr '[:upper:]' '[:lower:]')
+PAYLOAD_TEXT=$(printf '%s' "$INPUT" | jq -r '.message // .output // .response // ""')
+
+resolve_validation_text() {
+  if [ -n "$PAYLOAD_TEXT" ]; then
+    printf '%s' "$PAYLOAD_TEXT"
+    return 0
+  fi
+
+  if [ -z "$TRANSCRIPT_PATH" ] || [ ! -f "$TRANSCRIPT_PATH" ]; then
+    return 0
+  fi
+
+  # In real Copilot CLI hook payloads the agent response lives in transcriptPath, not in the hook JSON itself.
+  tool_call_id=$(jq -Rrsc --arg agent "$AGENT_NAME_LC" '
+    def events:
+      split("\n")
+      | map(select(length > 0) | fromjson?);
+    [
+      events[]
+      | select(.type == "subagent.started")
+      | select(((.data.agentName // .data.agentDisplayName // "") | ascii_downcase) == $agent)
+      | .data.toolCallId
+    ] | last // ""
+  ' "$TRANSCRIPT_PATH")
+
+  if [ -z "$tool_call_id" ]; then
+    return 0
+  fi
+
+  jq -Rrsc --arg tool_call_id "$tool_call_id" '
+    def events:
+      split("\n")
+      | map(select(length > 0) | fromjson?);
+    [
+      events[]
+      | select(.type == "assistant.message")
+      | select((.data.parentToolCallId // "") == $tool_call_id)
+      | .data.content // ""
+      | select(length > 0)
+    ] | last // ""
+  ' "$TRANSCRIPT_PATH"
+}
+
+VALIDATION_TEXT=$(resolve_validation_text)
+if [ -z "$VALIDATION_TEXT" ]; then
+  VALIDATION_TEXT=$(printf '%s' "$INPUT" | jq -r '[.. | strings] | join("\n")')
+fi
+
+ALL_TEXT=$VALIDATION_TEXT
 
 if printf '%s' "$AGENT_NAME_LC" | grep -q 'planner'; then
   if ! printf '%s' "$ALL_TEXT" | grep -Eq 'Clarification Status:[[:space:]]+(COMPLETE|INCOMPLETE)'; then
